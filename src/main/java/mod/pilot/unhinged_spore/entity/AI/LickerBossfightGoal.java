@@ -6,8 +6,6 @@ import com.Harbinger.Spore.Sentities.FallenMultipart.Licker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -28,7 +26,10 @@ public class LickerBossfightGoal extends Goal {
     private final int desiredYOffset;
     private int fireballCD;
     private final int fireballCDMax;
-    private final ArrayList<LargeFireball> fireballs = new ArrayList<>();
+    private final ArrayList<Fireball> fireballs = new ArrayList<>();
+    private boolean Crispy(){
+        return licker.getBurned();
+    }
     public LickerBossfightGoal(Licker licker, int wantedY, int fireballCD){
         this.licker = licker;
         this.desiredYOffset = wantedY;
@@ -48,8 +49,8 @@ public class LickerBossfightGoal extends Goal {
     @Override
     public void tick() {
         licker.resetFallDistance();
-        ArrayList<LargeFireball> toRemove = new ArrayList<>();
-        for (LargeFireball fireball : fireballs){
+        ArrayList<Fireball> toRemove = new ArrayList<>();
+        for (Fireball fireball : fireballs){
             if (fireball.isRemoved() || fireball.tickCount > 300){
                 licker.level().explode(fireball, null, null, fireball.position(),
                         1, true, Level.ExplosionInteraction.BLOCK);
@@ -62,7 +63,7 @@ public class LickerBossfightGoal extends Goal {
         if (target == null){
             FindTarget();
             if (!licker.onGround()){
-                licker.setDeltaMovement(0, -0.1, 0);
+                licker.setDeltaMovement(0, -0.1 * (Crispy() ? 2 : 1), 0);
             }
             return;
         }
@@ -72,13 +73,13 @@ public class LickerBossfightGoal extends Goal {
         }
 
         licker.lookAt(target, 10f, 10f);
-        if (licker.tickCount % 10 == 0) BreakBlocksNearby();
+        if ((licker.tickCount % 10) / (Crispy() ? 2 : 1) == 0) BreakBlocksNearby();
 
         if (licker.position().y < target.position().y + desiredYOffset){
-            licker.setDeltaMovement(0, 0.1, 0);
+            licker.setDeltaMovement(0, 0.1 * (Crispy() ? 2 : 1), 0);
         }
         else if (licker.position().y > target.position().y + desiredYOffset + 4){
-            licker.setDeltaMovement(0, -0.1, 0);
+            licker.setDeltaMovement(0, -0.1 * (Crispy() ? 2 : 1), 0);
         }
         else{
             licker.setDeltaMovement(licker.getDeltaMovement().multiply(1, 0, 1));
@@ -87,18 +88,18 @@ public class LickerBossfightGoal extends Goal {
         if (Math.sqrt(licker.distanceToSqr(target.position().add(0, desiredYOffset, 0))) > 10){
             licker.setDeltaMovement(licker.getDeltaMovement().multiply(0, 1, 0)
                     .add(target.position().subtract(licker.position()).normalize().multiply(1, 0, 1)
-                    .scale(licker.getAttributeValue(Attributes.MOVEMENT_SPEED) * 0.5)));
+                    .scale(licker.getAttributeValue(Attributes.MOVEMENT_SPEED) * (Crispy() ? 0.75 : 0.5))));
         }
         else if (Math.sqrt(licker.distanceToSqr(target.position().add(0, desiredYOffset, 0))) < 8){
             licker.setDeltaMovement(licker.getDeltaMovement().multiply(0, 1, 0)
                     .add(target.position().subtract(licker.position()).normalize().multiply(1, 0, 1)
-                    .scale(licker.getAttributeValue(Attributes.MOVEMENT_SPEED)  * 0.5).reverse()));
+                    .scale(licker.getAttributeValue(Attributes.MOVEMENT_SPEED) * (Crispy() ? 0.75 : 0.5)).reverse()));
         }
         else{
             Orbit(target);
         }
 
-        fireballCD = fireballCD == fireballCDMax ? 0 : fireballCD + 1;
+        fireballCD = fireballCD >= fireballCDMax ? 0 : fireballCD + (licker.getBurned() ? 2 : 1);
         if (fireballCD == 0){
             FireFireball(target);
         }
@@ -107,14 +108,14 @@ public class LickerBossfightGoal extends Goal {
     private void Orbit(LivingEntity target) {
         licker.setDeltaMovement(licker.getDeltaMovement().multiply(0, 1, 0)
                 .add(target.position().subtract(licker.position()).normalize().multiply(1, 0, 1)
-                        .yRot(90)).scale(licker.getAttributeValue(Attributes.MOVEMENT_SPEED) * 0.5));
+                        .yRot(90)).scale(licker.getAttributeValue(Attributes.MOVEMENT_SPEED) * (Crispy() ? 0.75 : 0.5)));
     }
 
     private void FireFireball(LivingEntity target) {
         RandomSource random = licker.getRandom();
         LargeFireball fireball = EntityType.FIREBALL.create(licker.level());
         fireball.setPos(licker.position().add(licker.getForward()).add(random.nextDouble(), random.nextDouble(), random.nextDouble()));
-        fireball.setDeltaMovement(target.position().subtract(licker.position()).normalize().scale((random.nextDouble() * 2) + 1.5));
+        fireball.setDeltaMovement(target.position().subtract(licker.position()).normalize().scale((random.nextDouble() * 2) + (Crispy() ? 2 : 1.5)));
         fireball.setOwner(licker);
         fireballs.add(fireball);
 
@@ -145,9 +146,6 @@ public class LickerBossfightGoal extends Goal {
                 distance = LE.distanceTo(licker);
             }
         }
-        if (target != null){
-            target.addEffect(new MobEffectInstance(MobEffects.GLOWING, 400));
-        }
         licker.setTarget(target);
     }
 
@@ -160,5 +158,18 @@ public class LickerBossfightGoal extends Goal {
     @Override
     public void start() {
         licker.setNoGravity(true);
+    }
+
+    @Override
+    public void stop() {
+        licker.setNoGravity(false);
+        ArrayList<Fireball> toRemove = new ArrayList<>();
+        for (Fireball fireball : fireballs){
+            licker.level().explode(fireball, null, null, fireball.position(),
+                    1, true, Level.ExplosionInteraction.BLOCK);
+            fireball.discard();
+            toRemove.add(fireball);
+        }
+        fireballs.removeAll(toRemove);
     }
 }

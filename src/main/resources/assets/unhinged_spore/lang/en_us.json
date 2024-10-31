@@ -1,0 +1,11 @@
+{
+  "entity.unhinged_spore.jort": "Jort",
+  "entity.unhinged_spore.spungus": "Spungus",
+
+  "item.unhinged_spore.jort_spawn": "Spawn Jort",
+  "item.unhinged_spore.spungus_spawn": "Spawn Spungus",
+
+  "sounds.unhinged_spore.jort_scream": "Jort screaming in anguish",
+
+  "creativetab.unhinged_tab": "Unhinged Spore"
+}
