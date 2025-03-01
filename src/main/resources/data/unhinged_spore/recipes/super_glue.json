@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smelting",
+  "category": "food",
+  "cookingtime": 201,
+  "experience": 0.05,
+  "ingredient": {
+    "item": "minecraft:bone"
+  },
+  "result": "unhinged_spore:super_glue"
+}

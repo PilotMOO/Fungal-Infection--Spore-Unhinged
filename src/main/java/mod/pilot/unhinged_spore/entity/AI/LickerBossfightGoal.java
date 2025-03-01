@@ -59,6 +59,7 @@ public class LickerBossfightGoal extends Goal {
             }
         }
         fireballs.removeAll(toRemove);
+
         LivingEntity target = licker.getTarget();
         if (target == null){
             FindTarget();

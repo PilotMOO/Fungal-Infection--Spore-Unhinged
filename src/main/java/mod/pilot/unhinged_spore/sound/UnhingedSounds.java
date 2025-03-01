@@ -13,6 +13,7 @@ public class UnhingedSounds {
             DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, UnhingedSpore.MOD_ID);
 
     public static final RegistryObject<SoundEvent> JORT_SCREAM = registerSoundEvents("jort_scream");
+    public static final RegistryObject<SoundEvent> BOING = registerSoundEvents("boing");
 
     private static RegistryObject<SoundEvent> registerSoundEvents(String name) {
         return SOUND_EVENTS.register(name, () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(UnhingedSpore.MOD_ID, name)));

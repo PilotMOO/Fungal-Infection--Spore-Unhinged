@@ -2,7 +2,16 @@
   "jort_scream": {
     "subtitles": "sounds.unhinged_spore.jort_scream",
     "sounds": [
-      "unhinged_spore:jort_scream"
+      "unhinged_spore:jort_scream",
+      "unhinged_spore:jort_scream2",
+      "unhinged_spore:jort_scream3",
+      "unhinged_spore:kirby"
+    ]
+  },
+  "boing": {
+    "subtitles": "sounds.unhinged_spore.boing",
+    "sounds": [
+      "unhinged_spore:boing"
     ]
   }
 }

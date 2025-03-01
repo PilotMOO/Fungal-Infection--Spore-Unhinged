@@ -1,5 +1,6 @@
 package mod.pilot.unhinged_spore;
 
+import mod.pilot.unhinged_spore.advancements.UnhingedAdvancements;
 import mod.pilot.unhinged_spore.entity.UnhingedEntities;
 import mod.pilot.unhinged_spore.items.UnhingedCreativeTabs;
 import mod.pilot.unhinged_spore.items.UnhingedItems;
@@ -8,6 +9,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 
@@ -23,6 +25,8 @@ public class UnhingedSpore
         UnhingedSounds.register(modEventBus);
         UnhingedItems.register(modEventBus);
         UnhingedCreativeTabs.register(modEventBus);
+
+        UnhingedAdvancements.RegisterAll();
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SERVER_SPEC, "unhinged_spore.toml");
         Config.loadConfig(Config.SERVER_SPEC, FMLPaths.CONFIGDIR.get().resolve("unhinged_spore.toml").toString());

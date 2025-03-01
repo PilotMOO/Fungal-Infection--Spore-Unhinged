@@ -6,7 +6,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
@@ -24,6 +23,9 @@ public class UnhingedCreativeTabs {
                     .displayItems((something, register) ->{
                         register.accept(UnhingedItems.JORT_SPAWN.get());
                         register.accept(UnhingedItems.SPUNGUS_SPAWN.get());
+                        register.accept(UnhingedItems.SPUNGUS_TOOTH.get());
+                        register.accept(UnhingedItems.SUPER_GLUE.get());
+                        register.accept(UnhingedItems.TOOTH_SWORD.get());
                     })
                     .build());
 }

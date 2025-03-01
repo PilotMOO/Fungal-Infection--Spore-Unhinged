@@ -10,6 +10,7 @@ import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.util.AzureLibUtil;
+import mod.pilot.unhinged_spore.Config;
 import mod.pilot.unhinged_spore.entity.AI.SpungusEndlessHungerGoal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -140,22 +141,26 @@ public class SpungusEntity extends EvolvedInfected implements GeoEntity {
                 .add(Attributes.ATTACK_KNOCKBACK, 0.2D)
                 .add(Attributes.ATTACK_SPEED, 4D);
     }
-
+    public static final List<? extends String> AttackWhitelist = SConfig.SERVER.whitelist.get();
+    public static final List<? extends String> RageBlacklist = Config.SERVER.spungus_rage_blacklist.get();
     @Override
     protected void addTargettingGoals() {
         this.goalSelector.addGoal(2, (new HurtTargetGoal(this, (livingEntity) -> {
             return this.TARGET_SELECTOR.test(livingEntity);
         }, Infected.class)).setAlertOthers(Infected.class));
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, true, (livingEntity) -> {
-            return livingEntity instanceof Player || SConfig.SERVER.whitelist.get().contains(livingEntity.getEncodeId());
-        }));
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, true, (livingEntity) -> {
-            return SConfig.SERVER.at_mob.get() && (this.TARGET_SELECTOR.test(livingEntity) || isRaging());
-        }));
-
         this.targetSelector.addGoal(1, new MeleeAttackGoal(this, 1, true));
+
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, true, (livingEntity) -> {
+            return livingEntity instanceof Player || AttackWhitelist.contains(livingEntity.getEncodeId());
+        }));
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, true, (livingEntity) -> {
+            return SConfig.SERVER.at_mob.get() && (this.TARGET_SELECTOR.test(livingEntity)
+                    || (isRaging() && !RageBlacklist.contains(livingEntity.getEncodeId())));
+        }));
         this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, JortEntity.class, false));
-        this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, LivingEntity.class, false, (LE) -> isRaging()));
+        this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, LivingEntity.class, false,
+                (LE) -> isRaging() && !RageBlacklist.contains(LE.getEncodeId())));
+
     }
     @Override
     protected void addRegularGoals() {

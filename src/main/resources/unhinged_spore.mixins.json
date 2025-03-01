@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "unhinged_spore.refmap.json",
   "mixins": [
+    "common.HowitzerArmBossfightMixin"
   ],
   "client": [
   ],

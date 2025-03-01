@@ -8,13 +8,17 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.ai.goal.Goal;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 @Deprecated
 public class DEPRECATEDHowitzerArmCopyGoal extends Goal {
     private final HowitzerArm arm;
     private final int maxSplit;
     private int splitTracker = 0;
-    private final boolean shouldCopy = Config.SERVER.arm_split_max.get() != 0;
-    private final int maxCopies = Config.SERVER.arm_split_max.get();
+    private final boolean shouldCopy = /*Config.SERVER.arm_split_max.get() != 0*/ false;
+    private final int maxCopies = /*Config.SERVER.arm_split_max.get()*/ -1;
     private int copyCount = 0;
     public DEPRECATEDHowitzerArmCopyGoal(HowitzerArm arm, int splitTimer){
         this.arm = arm;
@@ -41,8 +45,8 @@ public class DEPRECATEDHowitzerArmCopyGoal extends Goal {
 
         newArm.copyPosition(arm);
         newArm.setRight(arm.getRight());
-        newArm.goalSelector.addGoal(1, new DEPRECATEDHowitzerArmBossfightGoal(newArm, Config.SERVER.arm_throw_speed.get(),
-                Config.SERVER.arm_min_blocks.get(), Config.SERVER.arm_max_blocks.get(), 16));
+        /*newArm.goalSelector.addGoal(1, new DEPRECATEDHowitzerArmBossfightGoal(newArm, Config.SERVER.arm_throw_speed.get(),
+                Config.SERVER.arm_min_blocks.get(), Config.SERVER.arm_max_blocks.get(), 16));*/
 
         RandomSource random = arm.getRandom();
         newArm.setDeltaMovement(random.nextGaussian() * (random.nextBoolean() ? -1 : 1),

@@ -4,8 +4,19 @@
 
   "item.unhinged_spore.jort_spawn": "Spawn Jort",
   "item.unhinged_spore.spungus_spawn": "Spawn Spungus",
+  "item.unhinged_spore.spungus_tooth": "Spungus' Tooth",
+  "item.unhinged_spore.spungus_tooth.tooltip": "§7A surprisingly tough molar dropped from spungus after he attempted to eat something he shouldn't have. I wonder if it can be used for anything...",
+  "item.unhinged_spore.spungus_tooth.tooltip_advanced": "§8Combine this inside of a smithing table with a diamond sword and some super glue to craft a sword ;)",
+  "item.unhinged_spore.super_glue": "Super glue",
+  "item.unhinged_spore.super_glue.tooltip": "§7Yeah, it's just super glue. Nothing else to it. \n§4Seriously, don't drink it.",
+  "item.unhinged_spore.tooth_sword": "Tooth Blade",
+  "item.unhinged_spore.tooth_sword.tooltip": "§7An agile blade crafted from the tooth of the Spungus. It is surprisingly lightweight and VERY tough, making this weapon nigh unbreakable.",
+  "item.unhinged_spore.tooth_sword.tooltip_advanced": "§8This weapon is unbreakable, with a low damage output and no attack cooldown. Hits remove all I-frames from the entity. Yeah it's kind of busted if you use an autoclicker",
+
+  "item.unhinged_spore.advanced_tooltip_hint": "§8[Enable advanced tooltips for more info]",
 
   "sounds.unhinged_spore.jort_scream": "Jort screaming in anguish",
+  "sounds.unhinged_spore.boing": "Boing!",
 
   "creativetab.unhinged_tab": "Unhinged Spore"
 }

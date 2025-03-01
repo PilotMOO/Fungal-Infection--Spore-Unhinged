@@ -154,7 +154,7 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
     implementation fg.deobf("mod.azure.azurelib:azurelib-neo-${minecraft_version}:${azurelib_version}")
-    implementation fg.deobf("curse.maven:spore-678295:5794260")
+    implementation fg.deobf("curse.maven:spore-678295:6159946")
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

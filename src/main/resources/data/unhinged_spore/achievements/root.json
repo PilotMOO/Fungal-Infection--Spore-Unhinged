@@ -1,0 +1,22 @@
+{
+  "display": {
+    "icon": {
+      "item" : "spore:altered_spleen"
+    },
+    "title": {
+      "translate": "advancements.unhinged_spore.root.title"
+    },
+    "description": {
+      "translate": "advancements.unhinged_spore.root.desc"
+    },
+    "background": "spore:textures/block/biomass.png",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden" : false
+  },
+  "criteria": {
+    "on_join": {
+      "trigger": "unhinged_spore:on_join"
+    }
+  }
+}

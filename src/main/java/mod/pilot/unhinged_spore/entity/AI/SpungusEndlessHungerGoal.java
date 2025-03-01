@@ -2,6 +2,7 @@ package mod.pilot.unhinged_spore.entity.AI;
 
 import mod.pilot.unhinged_spore.Config;
 import mod.pilot.unhinged_spore.entity.mobs.SpungusEntity;
+import mod.pilot.unhinged_spore.items.UnhingedItems;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
@@ -11,11 +12,12 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SpungusEndlessHungerGoal extends Goal {
     private final SpungusEntity spungus;
@@ -33,11 +35,22 @@ public class SpungusEndlessHungerGoal extends Goal {
         return true;
     }
 
+    private static final List<? extends String> blacklist = Config.SERVER.spungus_blacklist_item.get();
+    private static final List<? extends String> rageList = Config.SERVER.spungus_rage_food.get();
+    private static final int rageTime = Config.SERVER.spungus_rage_timer.get();
+    private static final List<? extends String> toothList = Config.SERVER.spungus_break_tooth.get();
+
     @Override
     public void tick() {
         if (targetItem == null || spungus.tickCount % 80 == 0){
             ArrayList<ItemEntity> edibles = (ArrayList<ItemEntity>)spungus.level().getEntitiesOfClass(ItemEntity.class,
-                    spungus.getBoundingBox().inflate(32));
+                    spungus.getBoundingBox().inflate(32),
+                    (i) -> {
+                for (String s : blacklist){
+                    if (i.getItem().is(ForgeRegistries.ITEMS.getValue(new ResourceLocation(s)))) return false;
+                }
+                return true;
+            });
             ItemEntity closest = null;
             double distance = Double.MAX_VALUE;
             for (ItemEntity food : edibles){
@@ -71,9 +84,23 @@ public class SpungusEndlessHungerGoal extends Goal {
             }
         }
 
-        for (String rageFood : Config.SERVER.spungus_rage_food.get()){
+        for (String rageFood : rageList){
             if (targetItem.getItem().is(ForgeRegistries.ITEMS.getValue(new ResourceLocation(rageFood)))){
-                spungus.setSpungusRAGE(spungus.getSpungusRAGE() + Config.SERVER.spungus_rage_timer.get());
+                spungus.setSpungusRAGE(spungus.getSpungusRAGE() + rageTime);
+                break;
+            }
+        }
+        for (String tooth : toothList){
+            if (targetItem.getItem().is(ForgeRegistries.ITEMS.getValue(new ResourceLocation(tooth)))){
+                Vec3 pos = spungus.getEyePosition();
+                ItemEntity iEntity = new ItemEntity(spungus.level(), pos.x, pos.y, pos.z, new ItemStack(UnhingedItems.SPUNGUS_TOOTH.get()));
+                iEntity.setDeltaMovement(
+                        new Vec3(random.nextDouble() * 0.25 * (random.nextBoolean() ? -1 : 1),
+                                0.5,
+                                random.nextDouble() * 0.25 * (random.nextBoolean() ? -1 : 1)));
+                iEntity.setGlowingTag(true);
+                spungus.playSound(SoundEvents.ITEM_BREAK, 1f, 0.5f);
+                spungus.level().addFreshEntity(iEntity);
                 break;
             }
         }

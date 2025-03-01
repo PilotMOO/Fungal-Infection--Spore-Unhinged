@@ -21,8 +21,10 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 public class JortEntity extends EvolvedInfected implements GeoEntity {
     public JortEntity(EntityType<? extends Monster> type, Level level) {
@@ -122,8 +124,14 @@ public class JortEntity extends EvolvedInfected implements GeoEntity {
     @Override
     public void push(double pX, double pY, double pZ) {
         super.push(pX, pY, pZ);
+    }
+
+    @Override
+    public void playerTouch(@NotNull Player player) {
+        super.playerTouch(player);
         setBoom(true);
     }
+
     @Override
     public boolean hurt(DamageSource source, float amount) {
         setBoom(true);
